@@ -16,7 +16,9 @@
             int $b = 0
         ) {
             
-            $this->color = [ $r, $g, $b ];
+            $this->color = array_map( function ( $val ) {
+                return max( min( $val, 255 ), 0 );
+            }, [ $r, $g, $b ] );
             
         }
         
