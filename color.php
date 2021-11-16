@@ -302,6 +302,29 @@
             
         }
         
+        public function triplet() {
+            
+            if( !$this->isColor() )
+                return null;
+            
+            $c1 = new Color();
+            $c1->setRGB(
+                $this->color[1],
+                $this->color[2],
+                $this->color[0]
+            );
+            
+            $c2 = new Color();
+            $c2->setRGB(
+                $this->color[2],
+                $this->color[0],
+                $this->color[1]
+            );
+            
+            return [ $this, $c1, $c2 ];
+            
+        }
+        
     }
     
 ?>
