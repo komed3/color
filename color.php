@@ -4,7 +4,17 @@
         
         private $color;
         
-        public function setHexColor(
+        public function setRGB(
+            int $r = 0,
+            int $g = 0,
+            int $b = 0
+        ) {
+            
+            $this->color = [ $r, $g, $b ];
+            
+        }
+        
+        public function setHex(
             string $color
         ) {
             
@@ -18,11 +28,37 @@
             
         }
         
-        public function setRGBColor(
-            array $color
+        function setHSL(
+            float $h = 0,
+            float $s = 0,
+            float $l = 0
         ) {
             
-            $this->color = array_slice( $color, 0, 3 );
+            $c = ( 1 - abs( 2 * $l - 1 ) ) * $s;
+            $x = $c * ( 1 - abs( fmod( $h / 60, 2 ) - 1 ) );
+            $m = $l - ( $c / 2 );
+            
+            if( $h < 60 )
+                $this->color = [ $c, $x, 0 ];
+            
+            else if( $h < 120 )
+                $this->color = [ $x, $c, 0 ];
+            
+            else if( $h < 180 )
+                $this->color = [ 0, $c, $x ];
+            
+            else if( $h < 240 )
+                $this->color = [ 0, $x, $c ];
+            
+            else if( $h < 300 )
+                $this->color = [ $x, 0, $c ];
+            
+            else
+                $this->color = [ $c, 0, $x ];
+            
+            $this->color = array_map( function ( $val ) use ( $m ) {
+                return ( $val + $m ) * 255;
+            }, $this->color );
             
         }
         
@@ -44,7 +80,7 @@
             
             return ( $hash ? '#' : '' ) . implode( '',
                 array_map( function ( $val ) {
-                    return dechex( $val );
+                    return str_pad( dechex( $val ), 2, '0', STR_PAD_LEFT );
                 }, $this->color )
             );
             
