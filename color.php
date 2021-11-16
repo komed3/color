@@ -2,7 +2,7 @@
     
     class Color {
         
-        private $color;
+        public $color;
         
         # --- core functions -------------------------------------------
         
@@ -62,12 +62,6 @@
             return array_map( function ( $val ) use ( $m ) {
                 return ( $val + $m ) * 255;
             }, $rgb );
-            
-        }
-        
-        public function getColor() {
-            
-            return $this->color;
             
         }
         
@@ -407,6 +401,32 @@
                 pow( $a1 - $a2, 2 ) +
                 pow( $b1 - $b2, 2 )
             );
+            
+        }
+        
+        public function diff(
+            Color $compare
+        ) {
+            
+            if( !$this->isColor() || !$compare->isColor() )
+                return null;
+            
+            return sqrt(
+                pow( $compare->color[0] - $this->color[0], 2 ) +
+                pow( $compare->color[1] - $this->color[1], 2 ) +
+                pow( $compare->color[2] - $this->color[2], 2 )
+            );
+            
+        }
+        
+        public function match(
+            Color $compare
+        ) {
+            
+            if( !$this->isColor() || !$compare->isColor() )
+                return null;
+            
+            return 100 - $this->deltaE( $compare ) / sqrt( 195075 );
             
         }
         
