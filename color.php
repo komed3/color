@@ -83,6 +83,8 @@
                 return max( min( $val, 255 ), 0 );
             }, [ $r, $g, $b ] );
             
+            return $this;
+            
         }
         
         public function setHEX(
@@ -97,6 +99,8 @@
                 return hexdec( str_repeat( $val, $rep ) );
             }, str_split( $color, $spl ) );
             
+            return $this;
+            
         }
         
         function setHSL(
@@ -109,6 +113,8 @@
             $m = $l - ( $c / 2 );
             
             $this->color = $this->hue2rgb( $h, $c, $m );
+            
+            return $this;
             
         }
         
@@ -123,6 +129,8 @@
             
             $this->color = $this->hue2rgb( $h, $c, $m );
             
+            return $this;
+            
         }
         
         public function setCMYK(
@@ -135,6 +143,8 @@
             $this->color = array_map( function ( $val ) use ( $k ) {
                 return 255 * ( 1 - $val ) * ( 1 - $k );
             }, [ $c, $m, $y ] );
+            
+            return $this;
             
         }
         
@@ -231,6 +241,9 @@
         
         public function toXYZ() {
             
+            if( !$this->isColor() )
+                return null;
+            
             list( $r, $g, $b ) = array_map( function ( $val ) {
                 return ( ( $val /= 255 ) <= 0.04045
                     ? $val / 12.92
@@ -247,6 +260,9 @@
         }
         
         public function toLAB() {
+            
+            if( !$this->isColor() )
+                return null;
             
             $xyz = $this->toXYZ();
             
@@ -287,6 +303,12 @@
         
         public function invert() {
             
+            return $this->complementary();
+            
+        }
+        
+        public function complementary() {
+            
             if( !$this->isColor() )
                 return null;
             
@@ -322,6 +344,19 @@
             );
             
             return [ $this, $c1, $c2 ];
+            
+        }
+        
+        public function contrast() {
+            
+            if( !$this->isColor() )
+                return null;
+            
+            return (
+                $this->color[0] * 299 +
+                $this->color[1] * 587 +
+                $this->color[2] * 114
+            ) / 1000 >= 128 ? 0 : 1;
             
         }
         
