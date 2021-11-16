@@ -58,7 +58,7 @@
                 $rgb = [ $c, 0, $x ];
             
             return array_map( function ( $val ) use ( $m ) {
-                return round( ( $val + $m ) * 255 );
+                return ( $val + $m ) * 255;
             }, $rgb );
             
         }
@@ -123,7 +123,7 @@
         ) {
             
             $this->color = array_map( function ( $val ) use ( $k ) {
-                return round( 255 * ( 1 - $val ) * ( 1 - $k ) );
+                return 255 * ( 1 - $val ) * ( 1 - $k );
             }, [ $c, $m, $y ] );
             
         }
@@ -132,12 +132,9 @@
             bool $assoc = true
         ) {
             
-            return $this->isColor() ? (
-                $assoc ? [
-                    'r' => $this->color[0],
-                    'g' => $this->color[1],
-                    'b' => $this->color[2]
-                ] : $this->color
+            return $this->isColor() ? array_combine(
+                $assoc ? [ 'r', 'g', 'b' ] : [ 0, 1, 2 ],
+                array_map( 'round', $this->color )
             ) : null;
             
         }
@@ -168,7 +165,7 @@
             
             return $this->isColor() ? ( $hash ? '#' : '' ) . implode( '',
                 array_map( function ( $val ) {
-                    return str_pad( dechex( $val ), 2, '0', STR_PAD_LEFT );
+                    return str_pad( dechex( round( $val ) ), 2, '0', STR_PAD_LEFT );
                 }, $this->color )
             ) : null;
             
