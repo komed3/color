@@ -259,6 +259,23 @@
             
         }
         
+        public function toYxy() {
+            
+            if( !$this->isColor() )
+                return null;
+            
+            list( $x, $y, $z ) = array_values( $this->toXYZ() );
+            
+            $cero = max( $x, $y, $z ) == 0;
+            
+            return [
+                'Y' => $y,
+                'x' => $cero ? 0 : $x / ( $x + $y + $z ),
+                'y' => $cero ? 0 : $y / ( $x + $y + $z )
+            ];
+            
+        }
+        
         public function toLAB() {
             
             if( !$this->isColor() )
@@ -281,6 +298,21 @@
                 'a' => ( $x - $y ) * 500,
                 'b' => ( $y - $z ) * 200
 
+            ];
+            
+        }
+        
+        public function toYIQ() {
+            
+            if( !$this->isColor() )
+                return null;
+            
+            list( $r, $g, $b ) = $this->color;
+            
+            return [
+                'y' => 0.299900 * $r + 0.587000 * $g + 0.114000 * $b,
+                'i' => 0.595716 * $r - 0.274453 * $g - 0.321264 * $b,
+                'q' => 0.211456 * $r - 0.522591 * $g + 0.311350 * $b
             ];
             
         }
