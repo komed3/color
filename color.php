@@ -4,6 +4,8 @@
         
         private $color;
         
+        # --- core functions -------------------------------------------
+        
         private function isColor() {
             
             return is_array( $this->color ) && count( $this->color ) == 3;
@@ -62,6 +64,14 @@
             }, $rgb );
             
         }
+        
+        public function getColor() {
+            
+            return $this->color;
+            
+        }
+        
+        # --- set color functions --------------------------------------
         
         public function setRGB(
             int $r = 0,
@@ -127,6 +137,8 @@
             }, [ $c, $m, $y ] );
             
         }
+        
+        # --- output functions -----------------------------------------
         
         public function toRGB(
             bool $assoc = true
@@ -252,13 +264,41 @@
                 'l' => $y * 116 - 16,
                 'a' => ( $x - $y ) * 500,
                 'b' => ( $y - $z ) * 200
+
             ];
             
         }
         
-        public function getColor() {
+        # --- calculations ---------------------------------------------
+        
+        public function deltaE(
+            Color $compare
+        ) {
             
-            return $this->color;
+            if( !$this->isColor() || !$compare->isColor() )
+                return null;
+            
+            list( $l1, $a1, $b1 ) = array_values( $this->toLAB() );
+            list( $l2, $a2, $b2 ) = array_values( $compare->toLAB() );
+            
+            return sqrt( pow( $l1 - $l2, 2 ) + pow( $a1 - $a2, 2 ) + pow( $b1 - $b2, 2 ) );
+            
+        }
+        
+        public function invert() {
+            
+            if( !$this->isColor() )
+                return null;
+            
+            $complementary = new Color();
+            
+            $complementary->setRGB(
+                255 - $this->color[0],
+                255 - $this->color[1],
+                255 - $this->color[2]
+            );
+            
+            return $complementary;
             
         }
         
