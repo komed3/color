@@ -4,6 +4,12 @@
         
         private $color;
         
+        private function isColor() {
+            
+            return is_array( $this->color ) && count( $this->color ) == 3;
+            
+        }
+        
         public function setRGB(
             int $r = 0,
             int $g = 0,
@@ -14,7 +20,7 @@
             
         }
         
-        public function setHex(
+        public function setHEX(
             string $color
         ) {
             
@@ -66,27 +72,38 @@
             bool $assoc = true
         ) {
             
-            return $assoc ? [
-                'r' => $this->color[0],
-                'g' => $this->color[1],
-                'b' => $this->color[2]
-            ] : $this->color;
+            return $this->isColor() ? (
+                $assoc ? [
+                    'r' => $this->color[0],
+                    'g' => $this->color[1],
+                    'b' => $this->color[2]
+                ] : $this->color
+            ) : null;
             
         }
         
-        public function toHex(
+        public function toCMYK() {
+            
+            
+            
+        }
+        
+        public function toHEX(
             bool $hash = true
         ) {
             
-            return ( $hash ? '#' : '' ) . implode( '',
+            return $this->isColor() ? ( $hash ? '#' : '' ) . implode( '',
                 array_map( function ( $val ) {
                     return str_pad( dechex( $val ), 2, '0', STR_PAD_LEFT );
                 }, $this->color )
-            );
+            ) : null;
             
         }
         
         public function toHSL() {
+            
+            if( !$this->isColor() )
+                return null;
             
             list( $r, $g, $b ) = array_map( function ( $val ) {
                 return $val / 255;
