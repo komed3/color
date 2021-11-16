@@ -148,6 +148,22 @@
             
         }
         
+        public function setYUV(
+            float $y = 0,
+            float $u = 0,
+            float $v = 0
+        ) {
+            
+            $this->color = [
+                $y + ( 1 / 0.877 * $v ),
+                $y - ( 0.114 / 0.289391 * $u ) - ( 0.299 / 0.514799 * $v ),
+                $y + ( 1 / 0.493 * $u )
+            ];
+            
+            return $this;
+            
+        }
+        
         # --- output functions -----------------------------------------
         
         public function toRGB(
@@ -302,6 +318,23 @@
             
         }
         
+        public function toYUV() {
+            
+            if( !$this->isColor() )
+                return null;
+            
+            list( $r, $g, $b ) = $this->color;
+            
+            $y = 0.299 * $r + 0.587 * $g + 0.114 * $b;
+            
+            return [
+                'y' => $y,
+                'u' => 0.493 * ( $b - $y ),
+                'v' => 0.877 * ( $r - $y )
+            ];
+            
+        }
+        
         public function toYIQ() {
             
             if( !$this->isColor() )
@@ -317,7 +350,47 @@
             
         }
         
+        public function toYCbCr() {
+            
+            if( !$this->isColor() )
+                return null;
+            
+            list( $r, $g, $b ) = $this->color;
+            
+            return [
+                'y'  => 16 + ( 65.738 * $r / 256 ) + ( 129.057 * $g / 256 ) + ( 25.064 * $b / 256 ),
+                'Cb' => 128 - ( 37.945 * $r / 256 ) - ( 74.494 * $g / 256 ) + ( 112.439 * $b / 256 ),
+                'Cr' => 128 + ( 112.439 * $r / 256 ) - ( 94.154 * $g / 256 ) - ( 18.285 * $b / 256 )
+            ];
+            
+        }
+        
+        public function toYPbPr() {
+            
+            if( !$this->isColor() )
+                return null;
+            
+            list( $r, $g, $b ) = $this->gamma();
+            
+            $y = 0.299 * $r + 0.587 * $g + 0.114 * $b;
+            
+            return [
+                'y'  => $y,
+                'Pb' => ( $b - $y ) / 1.772,
+                'Pr' => ( $r - $y ) / 1.402
+            ];
+            
+        }
+        
         # --- calculations ---------------------------------------------
+        
+        public function gamma() {
+            
+            return $this->isColor() ? array_map( function ( $val ) {
+                return 255 * pow( $val / 256, 0.45 );
+            }, $this->color ) : null;
+            
+        }
         
         public function deltaE(
             Color $compare
@@ -329,7 +402,11 @@
             list( $l1, $a1, $b1 ) = array_values( $this->toLAB() );
             list( $l2, $a2, $b2 ) = array_values( $compare->toLAB() );
             
-            return sqrt( pow( $l1 - $l2, 2 ) + pow( $a1 - $a2, 2 ) + pow( $b1 - $b2, 2 ) );
+            return sqrt(
+                pow( $l1 - $l2, 2 ) +
+                pow( $a1 - $a2, 2 ) +
+                pow( $b1 - $b2, 2 )
+            );
             
         }
         
