@@ -10,7 +10,7 @@
             
         }
         
-        private function hue(
+        private function rgb2hue(
             $r, $g, $b,
             $delta
         ) {
@@ -30,6 +30,36 @@
                     return 60 * ( ( $r - $g ) / $delta + 4 );
                 
             }
+            
+        }
+        
+        private function hue2rgb(
+            $h, $c, $m
+        ) {
+            
+            $x = $c * ( 1 - abs( fmod( $h / 60, 2 ) - 1 ) );
+            
+            if( $h < 60 )
+                $rgb = [ $c, $x, 0 ];
+            
+            else if( $h < 120 )
+                $rgb = [ $x, $c, 0 ];
+            
+            else if( $h < 180 )
+                $rgb = [ 0, $c, $x ];
+            
+            else if( $h < 240 )
+                $rgb = [ 0, $x, $c ];
+            
+            else if( $h < 300 )
+                $rgb = [ $x, 0, $c ];
+            
+            else
+                $rgb = [ $c, 0, $x ];
+            
+            return array_map( function ( $val ) use ( $m ) {
+                return round( ( $val + $m ) * 255 );
+            }, $rgb );
             
         }
         
@@ -66,30 +96,22 @@
         ) {
             
             $c = ( 1 - abs( 2 * $l - 1 ) ) * $s;
-            $x = $c * ( 1 - abs( fmod( $h / 60, 2 ) - 1 ) );
             $m = $l - ( $c / 2 );
             
-            if( $h < 60 )
-                $this->color = [ $c, $x, 0 ];
+            $this->color = $this->hue2rgb( $h, $c, $m );
             
-            else if( $h < 120 )
-                $this->color = [ $x, $c, 0 ];
+        }
+        
+        function setHSV(
+            float $h = 0,
+            float $s = 0,
+            float $v = 0
+        ) {
             
-            else if( $h < 180 )
-                $this->color = [ 0, $c, $x ];
+            $c = $v * $s;
+            $m = $v - $c;
             
-            else if( $h < 240 )
-                $this->color = [ 0, $x, $c ];
-            
-            else if( $h < 300 )
-                $this->color = [ $x, 0, $c ];
-            
-            else
-                $this->color = [ $c, 0, $x ];
-            
-            $this->color = array_map( function ( $val ) use ( $m ) {
-                return round( ( $val + $m ) * 255 );
-            }, $this->color );
+            $this->color = $this->hue2rgb( $h, $c, $m );
             
         }
         
@@ -169,7 +191,7 @@
             $lightness = ( $max + $min ) / 2;
             
             return [
-                'h' => $this->hue( $r, $g, $b, $delta ),
+                'h' => $this->rgb2hue( $r, $g, $b, $delta ),
                 's' => $delta == 0 ? 0 : $delta / ( 1 - abs( 2 * $lightness - 1 ) ),
                 'l' => $lightness
             ];
@@ -191,7 +213,7 @@
             $delta = $max - $min;
             
             return [
-                'h' => $this->hue( $r, $g, $b, $delta ),
+                'h' => $this->rgb2hue( $r, $g, $b, $delta ),
                 's' => $max == 0 ? 0 : $delta / $max,
                 'v' => $max
             ];
