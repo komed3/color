@@ -26,6 +26,18 @@
             
         }
         
+        public function toRGB(
+            bool $assoc = true
+        ) {
+            
+            return $assoc ? [
+                'r' => $this->color[0],
+                'g' => $this->color[1],
+                'b' => $this->color[2]
+            ] : $this->color;
+            
+        }
+        
         public function toHex(
             bool $hash = true
         ) {
@@ -35,6 +47,54 @@
                     return dechex( $val );
                 }, $this->color )
             );
+            
+        }
+        
+        public function toHSL() {
+            
+            list( $r, $g, $b ) = array_map( function ( $val ) {
+                return $val / 255;
+            }, $this->color );
+            
+            $max = max( $r, $g, $b );
+            $min = min( $r, $g, $b );
+            
+            $delta = $max - $min;
+            
+            $lightness = ( $max + $min ) / 2;
+            
+            if( $delta == 0 ) {
+                
+                $saturation = $hue = 0;
+                
+            } else {
+                
+                $saturation = $delta / ( 1 - abs( 2 * $lightness - 1 ) );
+                
+                switch( $max ) {
+                    
+                    case $r:
+                        $hue = 60 * fmod( ( $g - $b ) / $delta, 6 ); 
+                        if( $b > $g ) $h += 360;
+                        break;
+                    
+                    case $g: 
+                        $hue = 60 * ( ( $b - $r ) / $delta + 2 ); 
+                        break;
+                    
+                    case $b: 
+                        $hue = 60 * ( ( $r - $g ) / $delta + 4 ); 
+                        break;
+                    
+                }
+                
+            }
+            
+            return [
+                'h' => $hue,
+                's' => $saturation,
+                'l' => $lightness
+            ];
             
         }
         
