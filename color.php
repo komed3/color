@@ -63,8 +63,21 @@
                 $this->color = [ $c, 0, $x ];
             
             $this->color = array_map( function ( $val ) use ( $m ) {
-                return ( $val + $m ) * 255;
+                return round( ( $val + $m ) * 255 );
             }, $this->color );
+            
+        }
+        
+        public function setCMYK(
+            float $c = 0,
+            float $m = 0,
+            float $y = 0,
+            float $k = 0
+        ) {
+            
+            $this->color = array_map( function ( $val ) use ( $k ) {
+                return round( 255 * ( 1 - $val ) * ( 1 - $k ) );
+            }, [ $c, $m, $y ] );
             
         }
         
@@ -84,7 +97,21 @@
         
         public function toCMYK() {
             
+            if( !$this->isColor() )
+                return null;
             
+            $k = 1 - max( $this->color ) / 255;
+            
+            list( $c, $m, $y ) = array_map( function ( $val ) use ( $k ) {
+                return ( 1 - $k - $val / 255 ) / ( 1 - $k );
+            }, $this->color );
+            
+            return [
+                'c' => $c,
+                'm' => $m,
+                'y' => $y,
+                'k' => $k
+            ];
             
         }
         
