@@ -10,6 +10,29 @@
             
         }
         
+        private function hue(
+            $r, $g, $b,
+            $delta
+        ) {
+            
+            if( $delta == 0 )
+                return 0;
+            
+            else switch( max( $r, $g, $b ) ) {
+                
+                case $r:
+                    return 60 * fmod( ( $g - $b ) / $delta, 6 ) + ( $b > $g ? 360 : 0 );
+                
+                case $g: 
+                    return 60 * ( ( $b - $r ) / $delta + 2 );
+                
+                case $b: 
+                    return 60 * ( ( $r - $g ) / $delta + 4 );
+                
+            }
+            
+        }
+        
         public function setRGB(
             int $r = 0,
             int $g = 0,
@@ -145,37 +168,32 @@
             
             $lightness = ( $max + $min ) / 2;
             
-            if( $delta == 0 ) {
-                
-                $saturation = $hue = 0;
-                
-            } else {
-                
-                $saturation = $delta / ( 1 - abs( 2 * $lightness - 1 ) );
-                
-                switch( $max ) {
-                    
-                    case $r:
-                        $hue = 60 * fmod( ( $g - $b ) / $delta, 6 ); 
-                        if( $b > $g ) $h += 360;
-                        break;
-                    
-                    case $g: 
-                        $hue = 60 * ( ( $b - $r ) / $delta + 2 ); 
-                        break;
-                    
-                    case $b: 
-                        $hue = 60 * ( ( $r - $g ) / $delta + 4 ); 
-                        break;
-                    
-                }
-                
-            }
+            return [
+                'h' => $this->hue( $r, $g, $b, $delta ),
+                's' => $delta == 0 ? 0 : $delta / ( 1 - abs( 2 * $lightness - 1 ) ),
+                'l' => $lightness
+            ];
+            
+        }
+        
+        public function toHSV() {
+            
+            if( !$this->isColor() )
+                return null;
+            
+            list( $r, $g, $b ) = array_map( function ( $val ) {
+                return $val / 255;
+            }, $this->color );
+            
+            $max = max( $r, $g, $b );
+            $min = min( $r, $g, $b );
+            
+            $delta = $max - $min;
             
             return [
-                'h' => $hue,
-                's' => $saturation,
-                'l' => $lightness
+                'h' => $this->hue( $r, $g, $b, $delta ),
+                's' => $max == 0 ? 0 : $delta / $max,
+                'v' => $max
             ];
             
         }
