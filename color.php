@@ -217,6 +217,45 @@
             
         }
         
+        public function toXYZ() {
+            
+            list( $r, $g, $b ) = array_map( function ( $val ) {
+                return ( ( $val /= 255 ) <= 0.04045
+                    ? $val / 12.92
+                    : pow( ( $val + 0.055 ) / 1.055, 2.4 )
+                ) * 100;
+            }, $this->color );
+            
+            return [
+                'x' => $r * 0.412453 + $g * 0.357580 + $b * 0.180423,
+                'y' => $r * 0.212671 + $g * 0.715160 + $b * 0.072169,
+                'z' => $r * 0.019334 + $g * 0.119193 + $b * 0.950227
+            ];
+            
+        }
+        
+        public function toLAB() {
+            
+            $xyz = $this->toXYZ();
+            
+            $x = $xyz['x'] / 95.047;
+            $y = $xyz['y'] / 100;
+            $z = $xyz['z'] / 108.883;
+            
+            list( $x, $y, $z ) = array_map( function ( $val ) {
+                return $val > 0.008856
+                    ? pow( $val, 1 / 3 )
+                    : $val * 7.787 + 16 / 116;
+            }, [ $x, $y, $z ] );
+            
+            return [
+                'l' => $y * 116 - 16,
+                'a' => ( $x - $y ) * 500,
+                'b' => ( $y - $z ) * 200
+            ];
+            
+        }
+        
         public function getColor() {
             
             return $this->color;
