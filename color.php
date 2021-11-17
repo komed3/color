@@ -472,7 +472,8 @@
         }
         
         public function deltaE(
-            Color $compare
+            Color $compare,
+            bool $percentage = false
         ) {
             
             if( !$this->isColor() || !$compare->isColor() )
@@ -481,37 +482,47 @@
             list( $l1, $a1, $b1 ) = array_values( $this->toLAB() );
             list( $l2, $a2, $b2 ) = array_values( $compare->toLAB() );
             
-            return sqrt(
+            $dE = sqrt(
                 pow( $l1 - $l2, 2 ) +
                 pow( $a1 - $a2, 2 ) +
                 pow( $b1 - $b2, 2 )
             );
             
+            return $percentage ? 1 - $dE / sqrt( 42768 ) : $dE;
+            
         }
         
         public function diff(
-            Color $compare
+            Color $compare,
+            string $space = 'RGB'
         ) {
             
             if( !$this->isColor() || !$compare->isColor() )
                 return null;
             
+            if( in_array( strtoupper( $space ), [ 'RGB', 'RYB' ] ) )
+                $fnc = 'to' . strtoupper( $space );
+            
+            list( $x1, $y1, $z1 ) = array_values( $this->$fnc() );
+            list( $x2, $y2, $z2 ) = array_values( $this->$fnc() );
+            
             return sqrt(
-                pow( $compare->color[0] - $this->color[0], 2 ) +
-                pow( $compare->color[1] - $this->color[1], 2 ) +
-                pow( $compare->color[2] - $this->color[2], 2 )
+                pow( $x2 - $x1, 2 ) +
+                pow( $y2 - $y1, 2 ) +
+                pow( $z2 - $z1, 2 )
             );
             
         }
         
         public function match(
-            Color $compare
+            Color $compare,
+            string $space = 'RGB'
         ) {
             
             if( !$this->isColor() || !$compare->isColor() )
                 return null;
             
-            return 100 - $this->deltaE( $compare ) / sqrt( 195075 );
+            return 1 - $this->diff( $compare, $space ) / sqrt( 195075 );
             
         }
         
