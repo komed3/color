@@ -81,6 +81,48 @@
             
         }
         
+        public function setRYB(
+            int $r = 0,
+            int $y = 0,
+            int $b = 0
+        ) {
+            
+            $w = min( $r, $y, $b );
+            
+            list( $r, $y, $b ) = array_map( function ( $val ) use ( $w ) {
+                return $val - $w;
+            }, [ $r, $y, $b ] );
+            
+            $my = max( $r, $y, $b );
+            
+            $g = min( $y, $b );
+            
+            $y -= $g;
+            $b -= $g;
+            
+            if( $b && $g ) {
+                
+                $b *= 2.0;
+                $g *= 2.0;
+                
+            }
+            
+            $r += $y;
+            $g += $y;
+            
+            $mg = max( $r, $g, $b );
+            $n = $my / $mg;
+            
+            list( $r, $g, $b ) = array_map( function ( $val ) use ( $w, $mg, $n ) {
+                return ( $mg ? $n : 1 ) * $val + $w;
+            }, [ $r, $g, $b ] );
+            
+            $this->color = [ $r, $g, $b ];
+            
+            return $this;
+            
+        }
+        
         public function setHEX(
             string $color
         ) {
@@ -168,6 +210,49 @@
                 $assoc ? [ 'r', 'g', 'b' ] : [ 0, 1, 2 ],
                 array_map( 'round', $this->color )
             ) : null;
+            
+        }
+        
+        public function toRYB() {
+            
+            if( !$this->isColor() )
+                return null;
+            
+            $w = min( $this->color );
+            
+            list( $r, $g, $b ) = array_map( function ( $val ) use ( $w ) {
+                return $val - $w;
+            }, $this->color );
+            
+            $mg = max( $r, $g, $b );
+            
+            $y = min( $r, $g );
+            
+            $r -= $y;
+            $g -= $y;
+            
+            if( $b && $g ) {
+                
+                $b /= 2.0;
+                $g /= 2.0;
+                
+            }
+            
+            $y += $g;
+            $b += $g;
+            
+            $my = max( $r, $y, $b );
+            $n = $mg / $my;
+            
+            list( $r, $y, $b ) = array_map( function ( $val ) use ( $w, $my, $n ) {
+                return ( $my ? $n : 1 ) * $val + $w;
+            }, [ $r, $y, $b ] );
+            
+            return [
+                'r' => $r,
+                'y' => $y,
+                'b' => $b
+            ];
             
         }
         
