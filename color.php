@@ -545,6 +545,29 @@
             
         }
         
+        public function lighten(
+            float $value = 0
+        ) {
+            
+            if( !$this->isColor() )
+                return null;
+            
+            list( $h, $s, $l ) = array_values( $this->toHSL() );
+            
+            return ( new Color() )->setHSL(
+                $h, $s, max( min( $l + $value, 1 ), 0 )
+            );
+            
+        }
+        
+        public function darken(
+            float $value = 0
+        ) {
+            
+            return $this->lighten( $value * (-1) );
+            
+        }
+        
         public function triplet() {
             
             return $this->triadic();

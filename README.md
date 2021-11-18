@@ -119,6 +119,14 @@ Returns difference or distance between two colors at percentage value. Accepted 
 
 Returns ``Color`` object with complementary color.
 
+#### ``lighten( value )``
+
+Return ``Color`` object lightened by ``value`` [0...1]
+
+#### ``darken( value )``
+
+Return ``Color`` object darkened by ``value`` [0...1]
+
 #### ``triadic()`` or ``triplet()``
 
 Returns the triadic color scheme (three colors that have the same distance from each other in the color wheel).
