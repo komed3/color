@@ -126,3 +126,37 @@ Returns the triadic color scheme (three colors that have the same distance from 
 #### ``contrast()``
 
 Returns contrast of given color: ``0`` is dark and ``1`` is light contrast.
+
+## Examples
+
+### Example 1: Convert color
+
+```php
+
+# define new Color object
+$color = new Color();
+
+# set RGB color
+$color->setRGB( 136, 176, 75 );
+
+# convert to HEX
+print_r( $color->toHEX() );
+
+# convert to CMYK
+print_r( $color->toCMYK() );
+```
+
+### Example 2: Distance between colors
+
+```php
+
+# define new Color objects and set colors
+$color_1 = new Color()->setHEX( '#34568B' );
+$color_2 = new Color()->setHSL( 257, 0.242, 0.471 );
+
+# get ΔE
+print_r( $color_1->deltaE( $color_2 ) );
+
+# get color match
+print_r( $color_1->match( $color_2 ) );
+```
