@@ -526,12 +526,6 @@
             
         }
         
-        public function invert() {
-            
-            return $this->complementary();
-            
-        }
-        
         public function complementary() {
             
             if( !$this->isColor() )
@@ -542,6 +536,35 @@
                 255 - $this->color[1],
                 255 - $this->color[2]
             );
+            
+        }
+        
+        public function invert() {
+            
+            return $this->complementary();
+            
+        }
+        
+        public function rotate(
+            float $degrees = 0
+        ) {
+            
+            if( !$this->isColor() )
+                return null;
+            
+            list( $h, $s, $l ) = array_values( $this->toHSL() );
+            
+            return ( new Color() )->setHSL(
+                ( $h + 360 + ( $degrees % 360 ) ) % 360, $s, $l
+            );
+            
+        }
+        
+        public function shift(
+            float $degrees = 0
+        ) {
+            
+            return $this->rotate( $degrees );
             
         }
         
@@ -568,16 +591,8 @@
             
         }
         
-        public function shift(
-            float $degrees = 0
-        ) {
-            
-            return $this->rotate( $degrees );
-            
-        }
-        
-        public function rotate(
-            float $degrees = 0
+        public function saturation(
+            float $value = 0
         ) {
             
             if( !$this->isColor() )
@@ -586,7 +601,7 @@
             list( $h, $s, $l ) = array_values( $this->toHSL() );
             
             return ( new Color() )->setHSL(
-                ( $h + 360 + ( $degrees % 360 ) ) % 360, $s, $l
+                ( $h, max( min( $s + $value, 1 ), 0 ), $l
             );
             
         }

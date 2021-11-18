@@ -119,6 +119,14 @@ Returns difference or distance between two colors at percentage value. Accepted 
 
 Returns ``Color`` object with complementary color.
 
+#### ``rotate( degrees )`` or ``shift( degrees )``
+
+Return ``Color`` object with color shift (rotation) by ``degrees`` [-359...359].
+
+#### ``saturation( value )``
+
+Return ``Color`` object with changed saturation by ``value`` [-1...1].
+
 #### ``lighten( value )``
 
 Return ``Color`` object lightened by ``value`` [0...1].
@@ -126,10 +134,6 @@ Return ``Color`` object lightened by ``value`` [0...1].
 #### ``darken( value )``
 
 Return ``Color`` object darkened by ``value`` [0...1].
-
-#### ``rotate( degrees )`` or ``shift( degrees )``
-
-Return ``Color`` object with color shift (rotation) by ``degrees`` [-359...359].
 
 #### ``grayscale( correction [ = false ] )``
 
