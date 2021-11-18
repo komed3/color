@@ -504,7 +504,7 @@
                 $fnc = 'to' . strtoupper( $space );
             
             list( $x1, $y1, $z1 ) = array_values( $this->$fnc() );
-            list( $x2, $y2, $z2 ) = array_values( $this->$fnc() );
+            list( $x2, $y2, $z2 ) = array_values( $compare->$fnc() );
             
             return sqrt(
                 pow( $x2 - $x1, 2 ) +
