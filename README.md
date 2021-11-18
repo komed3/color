@@ -2,7 +2,7 @@
 
 This class provides many functions for converting color spaces, calculates color differences, scales and much more.
 
-## Dokumentation
+## Documentation
 
 ### Set new color functions
 
