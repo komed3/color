@@ -537,19 +537,21 @@
             if( !$this->isColor() )
                 return null;
             
-            $complementary = new Color();
-            
-            $complementary->setRGB(
+            return ( new Color() )->setRGB(
                 255 - $this->color[0],
                 255 - $this->color[1],
                 255 - $this->color[2]
             );
             
-            return $complementary;
-            
         }
         
         public function triplet() {
+            
+            return $this->triadic();
+            
+        }
+        
+        public function triadic() {
             
             if( !$this->isColor() )
                 return null;
