@@ -146,17 +146,41 @@ print_r( $color->toHEX() );
 print_r( $color->toCMYK() );
 ```
 
+##### Output:
+
+```html
+
+#88b04b
+
+Array
+(
+    [c] => 0.22727272727273
+    [m] => 0
+    [y] => 0.57386363636364
+    [k] => 0.30980392156863
+)
+```
+
 ### Example 2: Distance between colors
 
 ```php
 
 # define new Color objects and set colors
-$color_1 = new Color()->setHEX( '#34568B' );
-$color_2 = new Color()->setHSL( 257, 0.242, 0.471 );
+$color_1 = ( new Color() )->setHEX( '#34568B' );
+$color_2 = ( new Color() )->setHSL( 257, 0.242, 0.471 );
 
 # get ΔE
 print_r( $color_1->deltaE( $color_2 ) );
 
 # get color match
 print_r( $color_1->match( $color_2 ) );
+```
+
+##### Output:
+
+```html
+
+16.369734508952
+
+0.87070712531894
 ```
