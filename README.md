@@ -8,31 +8,31 @@ This class provides many functions for converting color spaces, calculates color
 
 #### ``setRGB( r, g, b )``
 
-Defines color from parameters red, green and blue [0...255].
+Defines color from parameters ``red``, ``green`` and ``blue`` [0...255].
 
 #### ``setRYB( r, y, b )``
 
-Defines color from parameters red, yellow and blue [0...255].
+Defines color from parameters ``red``, ``yellow`` and ``blue`` [0...255].
 
 #### ``setHEX( hex )``
 
-Defines color from hexadecimal notation (3 or 6 digits, with or without hash).
+Defines color from hexadecimal notation ``hex`` (3 or 6 digits, with or without hash).
 
 #### ``setHSL( h, s, l )``
 
-Defines color from parameters hue [0...360], saturnation [0...1] and lightness [0...1].
+Defines color from parameters ``hue`` [0...360], ``saturnation`` [0...1] and ``lightness`` [0...1].
 
 #### ``setHSV( h, s, v )``
 
-Defines color from parameters hue [0...360], saturnation [0...1] and value [0...1].
+Defines color from parameters ``hue`` [0...360], ``saturnation`` [0...1] and ``value`` [0...1].
 
 #### ``setCMYK( c, m, y, k )``
 
-Defines color from parameters cyan, magenta, yellow and black key [0...1].
+Defines color from parameters ``cyan``, ``magenta``, ``yellow`` and ``black key`` [0...1].
 
 #### ``setYUV( y, u, v )``
 
-Defines color from luma component y and chrominance components, called u (blue projection) and v (red projection) [0...255].
+Defines color from luma component ``y`` and chrominance components, called ``u`` (blue projection) and ``v`` (red projection) [0...255].
 
 ### Output functions
 
