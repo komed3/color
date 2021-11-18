@@ -568,6 +568,58 @@
             
         }
         
+        public function shift(
+            float $degrees = 0
+        ) {
+            
+            return $this->rotate( $degrees );
+            
+        }
+        
+        public function rotate(
+            float $degrees = 0
+        ) {
+            
+            if( !$this->isColor() )
+                return null;
+            
+            list( $h, $s, $l ) = array_values( $this->toHSL() );
+            
+            return ( new Color() )->setHSL(
+                ( $h + 360 + ( $degrees % 360 ) ) % 360, $s, $l
+            );
+            
+        }
+        
+        public function grayscale(
+            bool $correction = false
+        ) {
+            
+            if( !$this->isColor() )
+                return null;
+            
+            list( $r, $g, $b ) = array_map( function ( $val ) {
+                return $val / 255;
+            }, $this->color );
+            
+            return $correction ? (
+                ( $c = 0.2126 * $r + 0.7152 * $g + 0.0722 * $b ) > 0.0031308
+                    ? 1.055 * pow( $c, 1 / 2.4 ) - 0.055
+                    : 12.92 * $c
+            ) : 0.299 * $r + 0.587 * $g + 0.114 * $b;
+            
+        }
+        
+        public function toGrayscale(
+            bool $correction = false
+        ) {
+            
+            return ( $g = $this->grayscale( $correction ) ) != null
+                ? ( new Color() )->setRGB( $g * 255, $g * 255, $g * 255 )
+                : null;
+            
+        }
+        
         public function triplet() {
             
             return $this->triadic();
@@ -576,37 +628,31 @@
         
         public function triadic() {
             
-            if( !$this->isColor() )
-                return null;
-            
-            $c1 = new Color();
-            $c1->setRGB(
-                $this->color[1],
-                $this->color[2],
-                $this->color[0]
-            );
-            
-            $c2 = new Color();
-            $c2->setRGB(
-                $this->color[2],
-                $this->color[0],
-                $this->color[1]
-            );
-            
-            return [ $this, $c1, $c2 ];
+            return $this->isColor() ? [
+                $this,
+                ( new Color() )->setRGB(
+                    $this->color[1],
+                    $this->color[2],
+                    $this->color[0]
+                ),
+                ( new Color() )->setRGB(
+                    $this->color[2],
+                    $this->color[0],
+                    $this->color[1]
+                )
+            ] : null;
             
         }
         
         public function contrast() {
             
-            if( !$this->isColor() )
-                return null;
-            
-            return (
-                $this->color[0] * 299 +
-                $this->color[1] * 587 +
-                $this->color[2] * 114
-            ) / 1000 >= 128 ? 0 : 1;
+            return $this->isColor() ? (
+                (
+                    $this->color[0] * 299 +
+                    $this->color[1] * 587 +
+                    $this->color[2] * 114
+                ) / 1000 >= 128 ? 0 : 1
+            ) : null;
             
         }
         

@@ -121,11 +121,23 @@ Returns ``Color`` object with complementary color.
 
 #### ``lighten( value )``
 
-Return ``Color`` object lightened by ``value`` [0...1]
+Return ``Color`` object lightened by ``value`` [0...1].
 
 #### ``darken( value )``
 
-Return ``Color`` object darkened by ``value`` [0...1]
+Return ``Color`` object darkened by ``value`` [0...1].
+
+#### ``rotate( degrees )`` or ``shift( degrees )``
+
+Return ``Color`` object with color shift (rotation) by ``degrees`` [-359...359].
+
+#### ``grayscale( correction [ = false ] )``
+
+Return value of grayscale. Gamma correction is optional.
+
+#### ``toGrayscale( correction [ = false ] )``
+
+Return ``Color`` object for grayscale color. Gamma correction is optional.
 
 #### ``triadic()`` or ``triplet()``
 
