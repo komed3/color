@@ -72,6 +72,10 @@ Returns color as ``[ Y, x, y ]``.
 
 Returns color as ``[ l, a, b ]``.
 
+#### ``toLCH()``
+
+Returns color as ``[ l, c, h ]``.
+
 #### ``toYUV()``
 
 Returns color as ``[ y, u, v ]``.

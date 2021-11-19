@@ -407,6 +407,21 @@
             
         }
         
+        public function toLCH() {
+            
+            if( !$this->isColor() )
+                return null;
+            
+            list( $l, $a, $b ) = $this->toLAB();
+            
+            return [
+                'l' => $l,
+                'c' => sqrt( pow( $a, 2 ) + pow( $b, 2 ) ),
+                'h' => atan( $b / $a )
+            ];
+            
+        }
+        
         public function toYUV() {
             
             if( !$this->isColor() )
