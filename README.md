@@ -163,6 +163,10 @@ Return array of ``Color`` objects with colors bewteen itself and ``stop`` color.
 
 Return array of ``Color`` objects with ``tints`` or ``shades`` form itself. ``steps`` form ``0`` up to ``255`` allowed.
 
+#### ``nearest( count [ = 1 ] )`` or ``closest( count [ = 1 ] )``
+
+Return array of named colors with their ``Color`` objects nearest to itself.
+
 ## Examples
 
 ### Example 1: Convert color
@@ -256,4 +260,38 @@ __Output:__
 [ 9] #37539b
 [10] #284493
 [11] #18358c
+```
+
+### Example 4: Nearest named colors
+
+```php
+
+# define new Color object and set color
+$color = ( new Color() )->setHEX( '#cc9074' );
+
+# find nearest 10 named colors
+$nearest = $color->nearest( 10 );
+
+# output result colors
+foreach( $nearest as $i => $color ) {
+    
+    printf( '[%d] %s (#%s)', $i, $color['name'], $color['color']->toHEX() );
+    
+}
+```
+
+__Output:__
+
+```html
+
+[0] Antique brass (#cd9575)
+[1] Burning Sand (#d99376)
+[2] Antique Brass (#c88a65)
+[3] Whiskey (#d59a6f)
+[4] Copperfield (#da8a67)
+[5] Tan (Crayola) (#d99a6c)
+[6] Middle red (#e58e73)
+[7] Camel (#c19a6b)
+[8] Raw sienna (#d68a59)
+[9] Dark salmon (#e9967a)
 ```
