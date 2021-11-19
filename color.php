@@ -741,6 +741,55 @@
             
         }
         
+        public function nearest(
+            int $count = 1
+        ) {
+            
+            if( !$this->isColor() || $count < 1 )
+                return null;
+            
+            list( $r, $g, $b ) = array_values( $this->toRGB() );
+            list( $h, $s, $l ) = array_values( $this->toHSL() );
+            
+            $results = [];
+            
+            foreach( json_decode( file_get_contents( __DIR__ . '/colors.json' ), true ) as $idx => $color ) {
+                
+                $diff = 2 * ( sqrt(
+                    pow( $r - $color['rgb'][0], 2 ) +
+                    pow( $g - $color['rgb'][1], 2 ) +
+                    pow( $b - $color['rgb'][2], 2 )
+                ) + sqrt(
+                    pow( $h - $color['hsl'][0], 2 ) +
+                    pow( $s - $color['hsl'][1], 2 ) +
+                    pow( $l - $color['hsl'][2], 2 )
+                ) );
+                
+                $results[] = [
+                    'name' => $color['key'],
+                    'color' => ( new Color() )->setHEX( $color['hex'] ),
+                    'exact' => $diff == 0,
+                    'diff' => $diff
+                ];
+                
+            }
+            
+            array_multisort( array_map( function ( $val ) {
+                return $val['diff' ];
+            }, $results ), SORT_ASC, $results );
+            
+            return array_slice( $results, 0, $count );
+            
+        }
+        
+        public function closest(
+            int $count = 1
+        ) {
+            
+            return $this->nearest( $count );
+            
+        }
+        
     }
     
 ?>
