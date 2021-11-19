@@ -145,11 +145,15 @@ Return ``Color`` object for grayscale color. Gamma correction is optional.
 
 #### ``triadic()`` or ``triplet()``
 
-Returns the triadic color scheme (three colors that have the same distance from each other in the color wheel).
+Return triadic color scheme (three colors that have the same distance from each other in the color wheel).
 
 #### ``contrast()``
 
-Returns contrast of given color: ``0`` is dark and ``1`` is light contrast.
+Return contrast of given color: ``0`` is dark and ``1`` is light contrast.
+
+#### ``gradient( Color stop, steps [ = 1, boundary [ = true ] ] )``
+
+Return array of ``Color`` objects with colors bewteen itself and ``stop`` color. ``steps`` form ``0`` up to ``255`` allowed, ``boundary = false`` returns array without start and stop colors.
 
 ## Examples
 
@@ -170,7 +174,7 @@ print_r( $color->toHEX() );
 print_r( $color->toCMYK() );
 ```
 
-##### Output:
+__Output:__
 
 ```html
 
@@ -200,11 +204,48 @@ print_r( $color_1->deltaE( $color_2 ) );
 print_r( $color_1->match( $color_2 ) );
 ```
 
-##### Output:
+__Output:__
 
 ```html
 
 16.369734508952
 
 0.87070712531894
+```
+
+### Example 3: Generate gradient bewteen two colors
+
+```php
+
+# define new Color objects and set colors
+$color_1 = ( new Color() )->setHEX( '#c8dee3' );
+$color_2 = ( new Color() )->setRGB( 24, 53, 140 );
+
+# generate gradient with 10 colors
+$gradient = $color_1->gradient( $color_2, 10, true );
+
+# output result colors
+foreach( $gradient as $i => $color ) {
+    
+    printf( '[%2d] %s', $i, $color->toHEX() );
+    
+}
+```
+
+__Output:__
+
+```html
+
+[ 0] #c8dee3
+[ 1] #b8cedb
+[ 2] #a8bfd3
+[ 3] #98afcb
+[ 4] #88a0c3
+[ 5] #7891bb
+[ 6] #6881b3
+[ 7] #5872ab
+[ 8] #4863a3
+[ 9] #37539b
+[10] #284493
+[11] #18358c
 ```
