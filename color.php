@@ -601,7 +601,7 @@
             list( $h, $s, $l ) = array_values( $this->toHSL() );
             
             return ( new Color() )->setHSL(
-                ( $h, max( min( $s + $value, 1 ), 0 ), $l
+                $h, max( min( $s + $value, 1 ), 0 ), $l
             );
             
         }
