@@ -159,6 +159,10 @@ Return contrast of given color: ``0`` is dark and ``1`` is light contrast.
 
 Return array of ``Color`` objects with colors bewteen itself and ``stop`` color. ``steps`` form ``0`` up to ``255`` allowed, ``boundary = false`` returns array without start and stop colors.
 
+#### ``palette( type [ = 'tints', steps [ = 1 ] ] )``
+
+Return array of ``Color`` objects with ``tints`` or ``shades`` form itself. ``steps`` form ``0`` up to ``255`` allowed.
+
 ## Examples
 
 ### Example 1: Convert color

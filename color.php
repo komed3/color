@@ -726,6 +726,21 @@
             
         }
         
+        public function palette(
+            string $type = 'tints',
+            int $steps = 1
+        ) {
+            
+            if( !$this->isColor() || !in_array( $type, [ 'tints', 'shades' ] ) )
+                return null;
+            
+            return $this->gradient( ( new Color() )->setHEX( [
+                'tints' => '#ffffff',
+                'shades' => '#000000'
+            ][ $type ] ), $steps );
+            
+        }
+        
     }
     
 ?>
