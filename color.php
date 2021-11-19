@@ -65,6 +65,16 @@
             
         }
         
+        private function interpolateColor(
+            $x, $y, $i, $n
+        ) {
+            
+            return ( $x < $y )
+                ? ( ( $y - $x ) * ( $i / $n ) ) + $x
+                : ( ( $x - $y ) * ( 1 - ( $i / $n ) ) ) + $y;
+            
+        }
+        
         # --- set color functions --------------------------------------
         
         public function setRGB(
@@ -668,6 +678,36 @@
                     $this->color[2] * 114
                 ) / 1000 >= 128 ? 0 : 1
             ) : null;
+            
+        }
+        
+        public function gradient(
+            Color $stop,
+            int $steps = 1,
+            bool $boundary = true
+        ) {
+            
+            if( !$this->isColor() || !$stop->isColor() )
+                return null;
+            
+            $n = max( min( $steps + 1, 255 ), 0 );
+            
+            list( $r1, $g1, $b1 ) = $this->color;
+            list( $r2, $g2, $b2 ) = $stop->color;
+            
+            $gradient = [];
+            
+            for( $i = 0; $i <= $n; $i++ ) {
+                
+                $gradient[] = ( new Color() )->setRGB(
+                    $this->interpolateColor( $r1, $r2, $i, $n ),
+                    $this->interpolateColor( $g1, $g2, $i, $n ),
+                    $this->interpolateColor( $b1, $b2, $i, $n )
+                );
+                
+            }
+            
+            return $boundary ? $gradient : array_slice( $gradient, 1, -1 );
             
         }
         
